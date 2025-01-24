@@ -117,21 +117,22 @@ def get_servicios(p_colmena , p_accessToken , p_fun , p_prestacion) -> dict :
 
 
 l_accessToken=get_access_token(l_colmena, l_username , l_password)
-print(l_accessToken)
+#print(l_accessToken)
 #l_accessToken="eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3Mzc3NDMxNDAsInN1YiI6IntcImlkXCI6MCxcInVzZXJuYW1lXCI6XCIxNTEzNjA4MC03XCIsXCJlbmFibGVkXCI6ZmFsc2UsXCJlc3RhZG9cIjowLFwiaWRBcHBcIjoyNDgsXCJjb2RpZ29SZXRvcm5vXCI6MCxcImdsb3NhUmV0b3Jub1wiOlwiXCJ9IiwiaXNzIjoiaHR0cFwvXC9tcHJvZC5jb2xtZW5hLmNsb3VkOjgwXC9zZXJ2aWNlc1wvYWZpbGlhZG9zIiwiaWF0IjoxNzM3NzQxMzQwfQ.8ZG9W8SQGMhzlHJwtcEXGpI1_t7JFWYuokSMkbQvc18"
 
 l_prestaciones_js = get_prestaciones(l_colmena , l_accessToken)
 l_fun = get_fun(l_colmena,l_accessToken)
 
+#print(json.dumps(l_prestaciones_js , indent=4))
 
 
-print(json.dumps(l_prestaciones_js , indent=4))
+with open("data/out_services.csv", mode="w", encoding="utf-8") as ar:
+    ar.write("Prestación;Comuna;Prestador;Rut;medico;copago")
 
-print("Prstacion;Comuna;Prestador;Rut;medico;copago")
+    for p in l_prestaciones_js:
+        l_servicios = get_servicios(l_colmena,l_accessToken,l_fun , "00"+str(p["id"]))
 
+        for s in l_servicios :
+            ar.write(f"{p["nombre"]};{s["prestador"]["comuna"]["nombre"]};{s["prestador"]["nombre"]};{s["medico"]["rut"]};{s["medico"]["nombre"]};{s["copago"]}\n")
 
-for p in l_prestaciones_js:
-    l_servicios = get_servicios(l_colmena,l_accessToken,l_fun , "00"+str(p["id"]))
-
-    for s in l_servicios :
-        print(f"{p["nombre"]};{s["prestador"]["comuna"]["nombre"]};{s["prestador"]["nombre"]};{s["medico"]["rut"]};{s["medico"]["nombre"]};{s["copago"]}\n")
+print("Terminado!")
