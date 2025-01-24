@@ -73,7 +73,7 @@ def get_fun(p_colmena , p_accessToken) -> dict :
 
     return response.json()
 
-def get_servicios(p_colmena , p_accessToken , p_fun) -> dict :
+def get_servicios(p_colmena , p_accessToken , p_fun , p_prestacion) -> dict :
 
 
     url = p_colmena + "private/bonos/simulacion"
@@ -94,7 +94,7 @@ def get_servicios(p_colmena , p_accessToken , p_fun) -> dict :
         "beneficiario": {            
         },
         "prestacion": {
-            "nombre": "0030127 01 0000000 N",
+            "nombre": F"{p_prestacion} 01 0000000 N",
         },
         "contrato": p_fun,
         "costoCero": "N"
@@ -116,13 +116,22 @@ def get_servicios(p_colmena , p_accessToken , p_fun) -> dict :
 
 
 
-#l_accessToken=get_access_token(l_colmena, l_username , l_password)
-#print(l_accessToken)
-l_accessToken="eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3Mzc1NzIzOTgsInN1YiI6IntcImlkXCI6MCxcInVzZXJuYW1lXCI6XCIxNTEzNjA4MC03XCIsXCJlbmFibGVkXCI6ZmFsc2UsXCJlc3RhZG9cIjowLFwiaWRBcHBcIjoyNDgsXCJjb2RpZ29SZXRvcm5vXCI6MCxcImdsb3NhUmV0b3Jub1wiOlwiXCJ9IiwiaXNzIjoiaHR0cFwvXC9tcHJvZC5jb2xtZW5hLmNsb3VkOjgwXC9zZXJ2aWNlc1wvYWZpbGlhZG9zIiwiaWF0IjoxNzM3NTcwNTk4fQ.iJVbEutOGLg6Q_ssSJveUFVOSscLfi8oPcyB3Sa8TDo"
+l_accessToken=get_access_token(l_colmena, l_username , l_password)
+print(l_accessToken)
+#l_accessToken="eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3Mzc3NDMxNDAsInN1YiI6IntcImlkXCI6MCxcInVzZXJuYW1lXCI6XCIxNTEzNjA4MC03XCIsXCJlbmFibGVkXCI6ZmFsc2UsXCJlc3RhZG9cIjowLFwiaWRBcHBcIjoyNDgsXCJjb2RpZ29SZXRvcm5vXCI6MCxcImdsb3NhUmV0b3Jub1wiOlwiXCJ9IiwiaXNzIjoiaHR0cFwvXC9tcHJvZC5jb2xtZW5hLmNsb3VkOjgwXC9zZXJ2aWNlc1wvYWZpbGlhZG9zIiwiaWF0IjoxNzM3NzQxMzQwfQ.8ZG9W8SQGMhzlHJwtcEXGpI1_t7JFWYuokSMkbQvc18"
 
 l_prestaciones_js = get_prestaciones(l_colmena , l_accessToken)
 l_fun = get_fun(l_colmena,l_accessToken)
 
-l_servicios = get_servicios(l_colmena,l_accessToken,l_fun)
 
-print(json.dumps(l_servicios , indent=4))
+
+print(json.dumps(l_prestaciones_js , indent=4))
+
+print("Prstacion;Comuna;Prestador;Rut;medico;copago")
+
+
+for p in l_prestaciones_js:
+    l_servicios = get_servicios(l_colmena,l_accessToken,l_fun , "00"+str(p["id"]))
+
+    for s in l_servicios :
+        print(f"{p["nombre"]};{s["prestador"]["comuna"]["nombre"]};{s["prestador"]["nombre"]};{s["medico"]["rut"]};{s["medico"]["nombre"]};{s["copago"]}\n")
