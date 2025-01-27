@@ -123,11 +123,12 @@ l_accessToken=get_access_token(l_colmena, l_username , l_password)
 l_prestaciones_js = get_prestaciones(l_colmena , l_accessToken)
 l_fun = get_fun(l_colmena,l_accessToken)
 
+
 #print(json.dumps(l_prestaciones_js , indent=4))
 
 
 with open("data/out_services.csv", mode="w", encoding="utf-8") as ar:
-    ar.write("Prestación;Comuna;Prestador;Rut;medico;copago\n")
+    ar.write("Prestacion;Comuna;Prestador;Rut;medico;copago\n")
 
     for p in l_prestaciones_js:
         l_servicios = get_servicios(l_colmena,l_accessToken,l_fun , "00"+str(p["id"]))
