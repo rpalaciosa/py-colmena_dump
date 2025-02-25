@@ -79,7 +79,7 @@ class ColmenaLogyc :
 
         return response.json()
 
-    def get_servicios(self , p_fun , p_prestacion) -> dict :
+    def get_servicios(self , p_fun , p_prestacion , p_comuna) -> dict :
 
 
         url = self.colmena + "private/bonos/simulacion"
@@ -94,7 +94,7 @@ class ColmenaLogyc :
             "tipoAtencion": 1,
             "comuna1": {
                 "codigoRetorno": 0,
-                "id": 7201,
+                "id": p_comuna,
                 "nombre": ""
             },
             "beneficiario": {            
